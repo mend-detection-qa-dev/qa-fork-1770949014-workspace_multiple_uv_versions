@@ -1,0 +1,48 @@
+[project]
+name = "service-b-modern"
+version = "1.0.0"
+description = "Service B: UV 0.7.x features with dependency groups"
+requires-python = ">=3.10"
+
+dependencies = [
+    # Core framework
+    "fastapi>=0.109.0",
+    "uvicorn[standard]>=0.27.0",
+    "pydantic>=2.6.0",
+
+    # Internal dependency on service-a
+    "service-a-legacy",
+
+    # Database and caching
+    "redis>=5.0.0",
+    "sqlalchemy>=2.0.25",
+
+    # HTTP client
+    "httpx>=0.26.0",
+    "aiohttp>=3.9.0",
+
+    # Utilities
+    "python-dotenv>=1.0.0",
+    "pydantic-settings>=2.1.0",
+]
+
+# Modern dependency groups (UV 0.7+ / PEP 735)
+[dependency-groups]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+    "pytest-cov>=4.1.0",
+    "httpx>=0.26.0",  # For testing
+]
+
+[tool.uv.sources]
+service-a-legacy = { workspace = true }
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+addopts = "-v --cov"

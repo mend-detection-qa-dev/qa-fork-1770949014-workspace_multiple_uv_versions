@@ -1,0 +1,117 @@
+[project]
+name = "service-c-latest"
+version = "1.0.0"
+description = "Service C: Latest UV 0.9.x+ features with multiple dependency groups"
+requires-python = ">=3.10"
+
+dependencies = [
+    # Latest framework versions
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.30.0",
+    "pydantic>=2.9.0",
+
+    # Internal dependencies on both services
+    "service-a-legacy",
+    "service-b-modern",
+
+    # Advanced database
+    "sqlalchemy[asyncio]>=2.0.35",
+    "alembic>=1.13.0",
+
+    # API clients
+    "httpx>=0.27.0",
+    "aiohttp>=3.10.0",
+
+    # Data processing
+    "pandas>=2.2.0",
+    "polars>=1.9.0",
+
+    # Utilities
+    "python-dotenv>=1.0.1",
+    "pydantic-settings>=2.5.0",
+    "structlog>=24.4.0",
+]
+
+[project.optional-dependencies]
+ml = [
+    # Machine learning extras
+    "torch>=2.1.0",
+    "transformers>=4.36.0",
+    "scikit-learn>=1.4.0",
+]
+
+monitoring = [
+    # Observability extras
+    "prometheus-client>=0.20.0",
+    "opentelemetry-api>=1.22.0",
+    "opentelemetry-sdk>=1.22.0",
+]
+
+# Latest UV 0.9.x+ features: Multiple dependency groups
+[dependency-groups]
+dev = [
+    # Development tools
+    "pytest>=8.3.0",
+    "pytest-asyncio>=0.24.0",
+    "pytest-xdist>=3.6.0",
+    "httpx>=0.27.0",
+]
+
+test = [
+    # Testing specific
+    "pytest>=8.3.0",
+    "pytest-cov>=6.0.0",
+    "pytest-mock>=3.14.0",
+    "coverage[toml]>=7.6.0",
+    "faker>=30.0.0",
+]
+
+lint = [
+    # Linting and formatting
+    "ruff>=0.7.0",
+    "mypy>=1.13.0",
+    "pyright>=1.1.380",
+    "black>=24.10.0",
+]
+
+docs = [
+    # Documentation
+    "mkdocs>=1.6.0",
+    "mkdocs-material>=9.5.0",
+    "mkdocstrings[python]>=0.26.0",
+]
+
+[tool.uv.sources]
+service-a-legacy = { workspace = true }
+service-b-modern = { workspace = true }
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+addopts = "-v --cov --cov-report=term-missing"
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.mypy]
+python_version = "3.10"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+
+[tool.coverage.run]
+source = ["service_c_latest"]
+omit = ["*/tests/*"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+]
